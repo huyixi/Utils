@@ -8,6 +8,10 @@ DOM=$(cat "$FILE_NAME")
 # 提取 href 属性
 hrefs=$(echo $DOM | grep -o '<a href=['"'"'"][^"'"'"']*['"'"'"]' | sed -e 's/^<a href=["'"'"']//' -e 's/["'"'"']$//')
 
+# 输出第一个获取到的 href
+first_href=$(echo "$hrefs" | head -n 1)
+echo "第一个获取到的 href 是：$first_href"
+
 # 提示是否添加前缀
 echo "是否要添加前缀？ (输入 Y 或 N) "
 read PREFIX_CHOICE
