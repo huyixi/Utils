@@ -6,5 +6,5 @@
 
 以下是该仓库中的一些工具：
 
-- `extract_dom_link.sh`: 这个脚本用于从 DOM 中提取链接。
+- `extract_dom_link.sh`: 这个脚本用于从 DOM 中提取链接。(删除，使用 Web2Book 将网页转换成 Epub 书籍)
 - `xf`:   讯飞录音笔转译内容提取
