@@ -1,54 +1,39 @@
 #!/bin/bash
 
-# 确保 duti 已安装
+# 检查 duti 是否安装
 if ! command -v duti &> /dev/null; then
-  echo "duti 未安装。请先安装 duti。"
-  exit 1
+    echo "duti 未安装。请先安装 duti。"
+    exit 1
 fi
 
-# 获取应用程序的 Bundle Identifier
-get_bundle_id() {
-  app_name="$1"
-  osascript -e "id of app \"$app_name\""
-}
+# 设置图片文件的默认应用为 qView
+duti -s com.interversehq.qView jpg all
+duti -s com.interversehq.qView jpeg all
+duti -s com.interversehq.qView png all
+duti -s com.interversehq.qView gif all
+duti -s com.interversehq.qView tiff all
+duti -s com.interversehq.qView bmp all
+duti -s com.interversehq.qView heic all
 
-# 获取常见应用程序的 Bundle Identifier
-apple_books_id=$(get_bundle_id "Books")
-preview_id=$(get_bundle_id "Preview")
-safari_id=$(get_bundle_id "Safari")
-vscode_id=$(get_bundle_id "Visual Studio Code")
-vlc_id=$(get_bundle_id "VLC")
-chrome_id=$(get_bundle_id "Google Chrome")
-textedit_id=$(get_bundle_id "TextEdit")
-excel_id=$(get_bundle_id "Microsoft Excel")
-word_id=$(get_bundle_id "Microsoft Word")
+# 设置视频文件的默认应用为 IINA
+duti -s com.colliderli.iina mov all
+duti -s com.colliderli.iina mp4 all
+duti -s com.colliderli.iina avi all
+duti -s com.colliderli.iina mkv all
+duti -s com.colliderli.iina m4v all
 
-# 定义文件类型和对应的应用程序
-declare -A file_types
-file_types=(
-  ["com.adobe.pdf"]=$apple_books_id
-  ["public.jpeg"]=$preview_id
-  ["public.png"]=$preview_id
-  ["public.html"]=$safari_id
-  ["public.plain-text"]=$vscode_id
-  ["public.python-script"]=$vscode_id
-  ["public.mpeg-4"]=$vlc_id
-  ["public.mp3"]=$vlc_id
-  ["public.zip-archive"]=$preview_id
-  ["com.microsoft.word.doc"]=$word_id
-  ["com.microsoft.excel.xls"]=$excel_id
-  ["com.microsoft.excel.xlsx"]=$excel_id
-  ["com.microsoft.powerpoint.ppt"]=$powerpoint_id
-  ["com.microsoft.powerpoint.pptx"]=$powerpoint_id
-  ["public.csv"]=$excel_id
-  ["com.apple.keynote.key"]=$keynote_id
-  ["com.apple.pages.pages"]=$pages_id
-  ["com.apple.numbers.numbers"]=$numbers_id
-)
+# 文本类型使用 Visual Studio Code
+duti -s com.microsoft.VSCode txt all
+duti -s com.microsoft.VSCode xml all
+duti -s com.microsoft.VSCode opml all
+duti -s com.microsoft.VSCode js all
+duti -s com.microsoft.VSCode json all
+duti -s com.microsoft.VSCode css all
+duti -s com.microsoft.VSCode md all
 
-# 设置默认应用程序
-for file_type in "${!file_types[@]}"; do
-  duti -s "${file_types[$file_type]}" "$file_type" all
-done
+# PDF 文件使用 Safari
+duti -s com.apple.Safari pdf all
 
-echo "已成功设置默认应用程序。"
+echo "默认应用程序设置已完成。"
+
+# 根据需要添加更多的文件类型和应用程序
