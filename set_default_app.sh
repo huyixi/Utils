@@ -24,6 +24,7 @@ duti -s com.colliderli.iina m4v all
 
 # 文本类型使用 Visual Studio Code
 duti -s com.microsoft.VSCode txt all
+duti -s com.microsoft.VSCode html all
 duti -s com.microsoft.VSCode xml all
 duti -s com.microsoft.VSCode opml all
 duti -s com.microsoft.VSCode js all
