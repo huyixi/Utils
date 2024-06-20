@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# System-Declared Uniform Type Identifiers
+# https://developer.apple.com/library/archive/documentation/Miscellaneous/Reference/UTIRef/Articles/System-DeclaredUniformTypeIdentifiers.html#//apple_ref/doc/uid/TP40009259
+
 # 检查 duti 是否安装
 if ! command -v duti &> /dev/null; then
     echo "duti 未安装。请先安装 duti。"
@@ -31,6 +34,8 @@ duti -s com.microsoft.VSCode js all
 duti -s com.microsoft.VSCode json all
 duti -s com.microsoft.VSCode css all
 duti -s com.microsoft.VSCode md all
+duti -s com.microsoft.VSCode xls all
+duti -s com.microsoft.VSCode xlsx all
 
 # PDF 文件使用 Safari
 duti -s com.apple.Safari pdf all
