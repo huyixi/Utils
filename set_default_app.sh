@@ -15,38 +15,60 @@ if ! command -v duti &> /dev/null; then
     exit 1
 fi
 
-# 设置图片文件的默认应用为 qView
-duti -s com.interversehq.qView jpg all
-duti -s com.interversehq.qView jpeg all
-duti -s com.interversehq.qView png all
-duti -s com.interversehq.qView gif all
-duti -s com.interversehq.qView tiff all
-duti -s com.interversehq.qView bmp all
-duti -s com.interversehq.qView heic all
+# 设置文件类型与应用程序的关联
+fileAssociations=(
+    # 图片文件
+    "com.interversehq.qView jpg"
+    "com.interversehq.qView jpeg"
+    "com.interversehq.qView png"
+    "com.interversehq.qView gif"
+    "com.interversehq.qView tiff"
+    "com.interversehq.qView bmp"
+    "com.interversehq.qView heic"
+    # 视频文件
+    "com.colliderli.iina mov"
+    "com.colliderli.iina mp4"
+    "com.colliderli.iina avi"
+    "com.colliderli.iina mkv"
+    "com.colliderli.iina m4v"
+    # 文本文件
+    "com.microsoft.VSCode txt"
+    "com.microsoft.VSCode xml"
+    "com.microsoft.VSCode opml"
+    "com.microsoft.VSCode json"
+    "com.microsoft.VSCode html"
+    "com.microsoft.VSCode css"
+    "com.microsoft.VSCode js"
+    "com.microsoft.VSCode ts"
+    "com.microsoft.VSCode tsx"
+    "com.microsoft.VSCode md"
+    "com.microsoft.VSCode xls"
+    "com.microsoft.VSCode xlsx"
+    "com.microsoft.VSCode pub"
+    # PDF 文件
+    "com.apple.iBooksX pdf"
 
-# 设置视频文件的默认应用为 IINA
-duti -s com.colliderli.iina mov all
-duti -s com.colliderli.iina mp4 all
-duti -s com.colliderli.iina avi all
-duti -s com.colliderli.iina mkv all
-duti -s com.colliderli.iina m4v all
+)
 
-# 文本类型使用 Visual Studio Code
-duti -s com.microsoft.VSCode txt all
-duti -s com.microsoft.VSCode html all
-duti -s com.microsoft.VSCode xml all
-duti -s com.microsoft.VSCode opml all
-duti -s com.microsoft.VSCode js all
-duti -s com.microsoft.VSCode json all
-duti -s com.microsoft.VSCode css all
-duti -s com.microsoft.VSCode md all
-duti -s com.microsoft.VSCode xls all
-duti -s com.microsoft.VSCode xlsx all
-duti -s com.microsoft.VSCode pub all
+# 错误日志
+errors=()
 
-# PDF 文件使用 Safari
-duti -s com.apple.iBooksX pdf all
+# 应用设置
+for association in "${fileAssociations[@]}"; do
+    app=$(echo "$association" | awk '{print $1}')
+    ext=$(echo "$association" | awk '{print $2}')
+    if ! duti -s "$app" "$ext" all; then
+        errors+=("设置 $ext 类型的默认应用程序为 $app 失败。")
+    fi
+done
 
-echo "默认应用程序设置已完成。"
-
-# 根据需要添加更多的文件类型和应用程序
+# 输出错误日志
+if [ ${#errors[@]} -ne 0 ]; then
+    echo "以下文件类型的默认应用程序设置失败："
+    for error in "${errors[@]}"; do
+        echo "$error"
+    done
+    exit 1
+else
+    echo "默认应用程序全部设置成功。"
+fi
