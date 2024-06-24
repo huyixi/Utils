@@ -1,0 +1,387 @@
+File Name: hugo-server.sh
+#!/bin/bash
+lsof -ti:1313 | xargs kill
+hugo server --ignoreCache &
+open -a 'Google Chrome' http://localhost:1313/
+
+-----------------
+
+
+File Name: lastmod.py
+import os
+import frontmatter
+import re
+
+# 定义遍历的目录
+dir_path = './'  # 当前目录
+
+for dirpath, dirnames, filenames in os.walk(dir_path):
+    for filename in filenames:
+        if filename.endswith('.md'):
+            filepath = os.path.join(dirpath, filename)
+            with open(filepath, 'r', encoding='utf-8') as file:
+                content = file.read()
+                # 通过正则表达式检查是否存在 date 字段但缺少 lastmod 字段
+                date_match = re.search(r'date: (.+)', content)
+                lastmod_match = re.search(r'lastmod: (.+)', content)
+                
+                if date_match and not lastmod_match:
+                    date_value = date_match.group(1)
+                    # 在 date 字段后插入 lastmod 字段
+                    content = content.replace(f"date: {date_value}", f"date: {date_value}\nlastmod: {date_value}")
+                    
+                    # 将更新的内容写回文件
+                    with open(filepath, 'w', encoding='utf-8') as file:
+                        file.write(content)
+
+print("Script completed!")
+
+-----------------
+
+
+File Name: open-news.sh
+#!/bin/bash
+
+open -a "NetNewsWire"
+
+open https://x.com
+open https://mastodon.social
+
+-----------------
+
+
+File Name: set_default_app.sh
+#!/bin/bash
+
+# System-Declared Uniform Type Identifiers
+# https://developer.apple.com/library/archive/documentation/Miscellaneous/Reference/UTIRef/Articles/System-DeclaredUniformTypeIdentifiers.html#//apple_ref/doc/uid/TP40009259
+
+# 检查 duti 是否安装
+if ! command -v duti &> /dev/null; then
+    echo "duti 未安装。请先安装 duti。"
+    exit 1
+fi
+
+# 设置图片文件的默认应用为 qView
+duti -s com.interversehq.qView jpg all
+duti -s com.interversehq.qView jpeg all
+duti -s com.interversehq.qView png all
+duti -s com.interversehq.qView gif all
+duti -s com.interversehq.qView tiff all
+duti -s com.interversehq.qView bmp all
+duti -s com.interversehq.qView heic all
+
+# 设置视频文件的默认应用为 IINA
+duti -s com.colliderli.iina mov all
+duti -s com.colliderli.iina mp4 all
+duti -s com.colliderli.iina avi all
+duti -s com.colliderli.iina mkv all
+duti -s com.colliderli.iina m4v all
+
+# 文本类型使用 Visual Studio Code
+duti -s com.microsoft.VSCode txt all
+duti -s com.microsoft.VSCode html all
+duti -s com.microsoft.VSCode xml all
+duti -s com.microsoft.VSCode opml all
+duti -s com.microsoft.VSCode js all
+duti -s com.microsoft.VSCode json all
+duti -s com.microsoft.VSCode css all
+duti -s com.microsoft.VSCode md all
+duti -s com.microsoft.VSCode xls all
+duti -s com.microsoft.VSCode xlsx all
+
+# PDF 文件使用 Safari
+duti -s com.apple.Safari pdf all
+
+echo "默认应用程序设置已完成。"
+
+# 根据需要添加更多的文件类型和应用程序
+
+-----------------
+
+
+File Name: App_bundle_id.md
+| 程序名称                                                  | Bundle ID                                                   |
+| --------------------------------------------------------- | ----------------------------------------------------------- |
+| loginwindow                                               | com.apple.loginwindow                                       |
+| Dock                                                      | com.apple.dock                                              |
+| SystemUIServer                                            | com.apple.systemuiserver                                    |
+| WindowManager                                             | com.apple.WindowManager                                     |
+| Control Center                                            | com.apple.controlcenter                                     |
+| Finder                                                    | com.apple.finder                                            |
+| Wallpaper                                                 | com.apple.wallpaper.agent                                   |
+| talagent                                                  | com.apple.talagent                                          |
+| ViewBridgeAuxiliary                                       | com.apple.ViewBridgeAuxiliary                               |
+| Notification Center                                       | com.apple.notificationcenterui                              |
+| Bob                                                       | com.hezongyidev.Bob                                         |
+| Day Progress                                              | com.sindresorhus.Day-Progress                               |
+| Shottr                                                    | cc.ffitch.shottr                                            |
+| Raycast                                                   | com.raycast.macos                                           |
+| Dozer                                                     | com.mortennn.Dozer                                          |
+| Google Drive                                              | com.google.drivefs.finderhelper.findersync                  |
+| Wi-Fi                                                     | com.apple.wifi.WiFiAgent                                    |
+| AirPlayUIAgent                                            | com.apple.AirPlayUIAgent                                    |
+| TextInputMenuAgent                                        | com.apple.TextInputMenuAgent                                |
+| Take a Break                                              | tech.miidii.TakeABreak                                      |
+| Spotlight                                                 | com.apple.Spotlight                                         |
+| Squirrel                                                  | im.rime.inputmethod.Squirrel                                |
+| FigmaAgent                                                | com.figma.agent                                             |
+| CursorUIViewService                                       | com.apple.TextInputUI.xpc.CursorUIViewService               |
+| UIKitSystem                                               | com.apple.UIKitSystemApp                                    |
+| Dock Extra                                                | com.apple.dock.extra                                        |
+| Dock Extra                                                | com.apple.dock.external.extra.arm64                         |
+| com.apple.CoreSimulator.CoreSimulatorService              | com.apple.CoreSimulator.CoreSimulatorService                |
+| Simulator                                                 | com.apple.CoreSimulator.SimulatorTrampoline                 |
+| Stash                                                     | ws.stash.app                                                |
+| Family                                                    | com.apple.Family                                            |
+| storeuid                                                  | com.apple.storeuid                                          |
+| UserNotificationCenter                                    | com.apple.UserNotificationCenter                            |
+| PowerChime                                                | com.apple.PowerChime                                        |
+| CoreLocationAgent                                         | com.apple.CoreLocationAgent                                 |
+| ShareSheetUI (Finder)                                     | com.apple.sharing.ShareSheetUI                              |
+| SoftwareUpdateNotificationManager                         | com.apple.SoftwareUpdateNotificationManager                 |
+| Keychain Circle Notification                              | com.apple.security.Keychain-Circle-Notification             |
+| Siri                                                      | com.apple.Siri                                              |
+| CoreServicesUIAgent                                       | com.apple.coreservices.uiagent                              |
+| SiriNCService                                             | com.apple.SiriNCService                                     |
+| coreautha                                                 | com.apple.LocalAuthentication.UIAgent                       |
+| TextInputSwitcher                                         | com.apple.TextInputSwitcher                                 |
+| nsattributedstringagent                                   | com.apple.textkit.nsattributedstringagent                   |
+| QLPreviewGenerationExtension (Raycast)                    | com.apple.QuickLookUIFramework.QLPreviewGenerationExtension |
+| AirDrop (Finder)                                          | com.apple.share.AirDrop.send                                |
+| QuickLookUIService (AirDrop (Finder))                     | com.apple.quicklook.QuickLookUIService                      |
+| QuickLookUIService (Finder)                               | com.apple.quicklook.QuickLookUIService                      |
+| Single Sign-On                                            | com.apple.AppSSOAgent                                       |
+| nbagent                                                   | com.apple.nbagent                                           |
+| Raycast Graphics and Media                                | com.apple.WebKit.GPU                                        |
+| Safari                                                    | com.apple.Safari                                            |
+| Safari Networking                                         | com.apple.WebKit.Networking                                 |
+| com.apple.Safari.SandboxBroker (Safari)                   | com.apple.Safari.SandboxBroker                              |
+| Bitwarden (Personal) Safari Web Extension                 | com.apple.WebKit.WebContent                                 |
+| Eagle for Safari (Personal) Safari Web Extension          | com.apple.WebKit.WebContent                                 |
+| Safari Graphics and Media                                 | com.apple.WebKit.GPU                                        |
+| Bitwarden                                                 | com.bitwarden.desktop.safari                                |
+| Open and Save Panel Service (Safari)                      | com.apple.appkit.xpc.openAndSavePanelService                |
+| QuickLookUIService (Open and Save Panel Service (Safari)) | com.apple.quicklook.QuickLookUIService                      |
+| ThemeWidgetControlViewService (Safari)                    | com.apple.appkit.xpc.ThemeWidgetControlViewService          |
+| Vimari (Safari)                                           | net.televator.Vimari.SafariExtension                        |
+| Downie Safari Extension (Safari)                          | com.charliemonroe.Downie-4-Downie-Extension                 |
+| Subscribe to Feed (Safari)                                | com.ranchero.NetNewsWire-Evergreen.SubscribeToFeed          |
+| Instapaper (Safari)                                       | com.instapaper.Instapaper-Mac.Safari                        |
+| MiaoYan                                                   | com.tw93.MiaoYan                                            |
+| MiaoYan Networking                                        | com.apple.WebKit.Networking                                 |
+| ThemeWidgetControlViewService (MiaoYan)                   | com.apple.appkit.xpc.ThemeWidgetControlViewService          |
+| OSDUIHelper                                               | com.apple.OSDUIHelper                                       |
+| chronod                                                   | com.apple.chronod                                           |
+| Universal Control                                         | com.apple.universalcontrol                                  |
+| Code                                                      | com.microsoft.VSCode                                        |
+| ThemeWidgetControlViewService (Code)                      | com.apple.appkit.xpc.ThemeWidgetControlViewService          |
+| QuickLookSatellite                                        | com.apple.quicklook.satellite                               |
+| Telegram                                                  | ru.keepcoder.Telegram                                       |
+| ThemeWidgetControlViewService (Telegram)                  | com.apple.appkit.xpc.ThemeWidgetControlViewService          |
+| Safari Web Content                                        | com.apple.WebKit.WebContent                                 |
+| ChatGPT                                                   | com.openai.chat                                             |
+| AccessibilityVisualsAgent                                 | com.apple.AccessibilityVisualsAgent                         |
+| Safari Web Inspector                                      | com.apple.WebKit.WebContent                                 |
+| Downie 4                                                  | com.charliemonroe.Downie-4                                  |
+| Downie 4 Networking                                       | com.apple.WebKit.Networking                                 |
+| Notes                                                     | com.apple.Notes.WidgetExtension                             |
+| iTerm2                                                    | com.googlecode.iterm2                                       |
+
+-----------------
+
+
+File Name: sortData.py
+import sqlite3
+import datetime
+import os
+
+def export_records(duration="3"):
+    # Connect to the SQLite database
+    conn = sqlite3.connect('data.db')
+    cursor = conn.cursor()
+
+    # Calculate the starting date based on the given duration
+    today = datetime.datetime.now()
+    
+    if isinstance(duration, (int, str)) and duration.isdigit():
+        start_date = (today - datetime.timedelta(days=int(duration))).strftime('%Y-%m-%d %H:%M:%S')
+    elif duration == "周":
+        start_date = (today - datetime.timedelta(days=7)).strftime('%Y-%m-%d %H:%M:%S')
+    elif duration == "月":
+        # Calculate start date as the same day of the previous month
+        if today.month == 1:
+            start_date = today.replace(year=today.year-1, month=12).strftime('%Y-%m-%d %H:%M:%S')
+        else:
+            start_date = today.replace(month=today.month-1).strftime('%Y-%m-%d %H:%M:%S')
+    elif duration == "年":
+        start_date = today.replace(year=today.year-1).strftime('%Y-%m-%d %H:%M:%S')
+    else:
+        raise ValueError("Invalid duration provided.")
+    
+    cursor.execute('''
+    SELECT fileName, createTime, summary FROM records WHERE createTime >= ? ORDER BY createTime
+    ''', (start_date,))
+    records = cursor.fetchall()
+
+    # Generate the total summary from all summaries
+    total_summary = "\n".join([record[2] for record in records if record[2]])
+
+    # Generate the text to save
+    text_to_save = f"Total Summary:\n{total_summary}\n\n"
+    for record in records:
+        text_to_save += f"File Name: {record[0]}\nCreation Time: {record[1]}\nSummary:\n{record[2]}\n\n"
+
+    # Generate the file name based on the start and end dates
+    end_date = today.strftime('%Y%m%d')
+    start_date_str = datetime.datetime.strptime(start_date, '%Y-%m-%d %H:%M:%S').strftime('%Y%m%d')
+    sorted_file_name = f"讯飞录音笔_{start_date_str}_{end_date}.txt"
+    sorted_file_path = os.path.join(os.getcwd(), sorted_file_name)
+    
+    with open(sorted_file_path, 'w', encoding='utf-8') as file:
+        file.write(text_to_save)
+
+    conn.close()
+
+    return sorted_file_name
+
+if __name__ == "__main__":
+    file_name = export_records()
+    print(f"Data exported to '{file_name}'.")
+-----------------
+
+
+File Name: main.py
+import insertData
+import sortData
+
+if __name__ == '__main__':
+    insertData.insert_data_to_db()
+    sortData.export_records("3")
+-----------------
+
+
+File Name: insertData.py
+import datetime
+import json
+import sqlite3
+
+def insert_data_to_db(filename='input.json'):
+    conn = sqlite3.connect('data.db')
+    cursor = conn.cursor()
+
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS records (
+        id TEXT PRIMARY KEY,
+        fileName TEXT,
+        createTime TEXT,
+        summary TEXT
+    )
+    ''')
+
+    with open(filename, 'r', encoding='utf-8') as file:
+        data = json.load(file)
+
+    for record in data["data"]["records"]:
+        if record["summary"]:  # Only insert if summary is not empty
+            cursor.execute('''
+            INSERT OR IGNORE INTO records (id, fileName, createTime, summary)
+            VALUES (?, ?, ?, ?)
+            ''', (record["id"], record["fileName"], datetime.datetime.fromtimestamp(record["createTime"] / 1000).strftime('%Y-%m-%d %H:%M:%S'), record["summary"]))
+
+    conn.commit()
+    conn.close()
+
+    return "Data inserted/updated in SQLite database 'data.db'."
+-----------------
+
+
+File Name: README.md
+# 我的工具库
+
+这个仓库是用来保存我所有能够复用的工具。这些工具旨在帮助自动化或简化一些常见的任务。
+
+- `extract_dom_link.sh`: 这个脚本用于从 DOM 中提取链接。(删除，使用 Web2Book 将网页转换成 Epub 书籍)
+- `xf`:   讯飞录音笔转译内容提取
+- lastmod.py: hugo 文章添加 lastmod
+- hugo-server.sh: 关闭占用的 localhost:1313 端口，启动 hugo server
+- get_files_content: 获取文件夹下所有文件的内容
+
+-----------------
+
+
+File Name: .gitignore
+*.DS_Store  
+node_modules 
+*.log 
+idea/ 
+*.local 
+.DS_Store 
+dist 
+.cache 
+.idea 
+logs 
+*-debug.log 
+*-error.log 
+*__pycache__/
+
+-----------------
+
+
+File Name: Cargo.toml
+[package]
+name = "get_files_content"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+
+-----------------
+
+
+File Name: .rustc_info.json
+{"rustc_fingerprint":10542546656862104049,"outputs":{"4614504638168534921":{"success":true,"status":"","code":0,"stdout":"rustc 1.76.0 (07dca489a 2024-02-04)\nbinary: rustc\ncommit-hash: 07dca489ac2d933c78d3c5158e3f43beefeb02ce\ncommit-date: 2024-02-04\nhost: aarch64-apple-darwin\nrelease: 1.76.0\nLLVM version: 17.0.6\n","stderr":""},"15729799797837862367":{"success":true,"status":"","code":0,"stdout":"___\nlib___.rlib\nlib___.dylib\nlib___.dylib\nlib___.a\nlib___.dylib\n/Users/huyixi/.rustup/toolchains/stable-aarch64-apple-darwin\noff\npacked\nunpacked\n___\ndebug_assertions\npanic=\"unwind\"\nproc_macro\ntarget_arch=\"aarch64\"\ntarget_endian=\"little\"\ntarget_env=\"\"\ntarget_family=\"unix\"\ntarget_feature=\"aes\"\ntarget_feature=\"crc\"\ntarget_feature=\"dit\"\ntarget_feature=\"dotprod\"\ntarget_feature=\"dpb\"\ntarget_feature=\"dpb2\"\ntarget_feature=\"fcma\"\ntarget_feature=\"fhm\"\ntarget_feature=\"flagm\"\ntarget_feature=\"fp16\"\ntarget_feature=\"frintts\"\ntarget_feature=\"jsconv\"\ntarget_feature=\"lor\"\ntarget_feature=\"lse\"\ntarget_feature=\"neon\"\ntarget_feature=\"paca\"\ntarget_feature=\"pacg\"\ntarget_feature=\"pan\"\ntarget_feature=\"pmuv3\"\ntarget_feature=\"ras\"\ntarget_feature=\"rcpc\"\ntarget_feature=\"rcpc2\"\ntarget_feature=\"rdm\"\ntarget_feature=\"sb\"\ntarget_feature=\"sha2\"\ntarget_feature=\"sha3\"\ntarget_feature=\"ssbs\"\ntarget_feature=\"vh\"\ntarget_has_atomic=\"128\"\ntarget_has_atomic=\"16\"\ntarget_has_atomic=\"32\"\ntarget_has_atomic=\"64\"\ntarget_has_atomic=\"8\"\ntarget_has_atomic=\"ptr\"\ntarget_os=\"macos\"\ntarget_pointer_width=\"64\"\ntarget_vendor=\"apple\"\nunix\n","stderr":""}},"successes":{}}
+-----------------
+
+
+File Name: CACHEDIR.TAG
+Signature: 8a477f597d28d172789f06886806bc55
+# This file is a cache directory tag created by cargo.
+# For information about cache directory tags see https://bford.info/cachedir/
+
+-----------------
+
+
+File Name: bin-get_files_content.json
+{"rustc":13833583445748798061,"features":"[]","declared_features":"","target":10024020606492413526,"profile":14094339167972473758,"path":1684066648322511884,"deps":[],"local":[{"CheckDepInfo":{"dep_info":"release/.fingerprint/get_files_content-f87143aa1b1172be/dep-bin-get_files_content"}}],"rustflags":[],"metadata":7797948686568424061,"config":2202906307356721367,"compile_kind":0}
+-----------------
+
+
+File Name: bin-get_files_content
+3093d054c952654a
+-----------------
+
+
+File Name: invoked.timestamp
+This file has an mtime of when this was started.
+-----------------
+
+
+File Name: dep-bin-get_files_content
+       src/main.rs    
+-----------------
+
+
+File Name: get_files_content.d
+/Users/huyixi/i/Utils/get_files_content/target/release/get_files_content: /Users/huyixi/i/Utils/get_files_content/src/main.rs
+
+-----------------
+
+
+File Name: .cargo-lock
+
+-----------------
+
+

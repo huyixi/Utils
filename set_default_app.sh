@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Bundle Identifiers
+# For example:
+# mdls -name kMDItemCFBundleIdentifier /System/Applications/Books.app
+# Get all bundle identifiers in /Applications
+# lsappinfo list | rg --multiline '("[^"]*?") ASN:.*\n.*bundleID=("[^"]*?")' --replace '$1 $2' --only-matching
+
 # System-Declared Uniform Type Identifiers
 # https://developer.apple.com/library/archive/documentation/Miscellaneous/Reference/UTIRef/Articles/System-DeclaredUniformTypeIdentifiers.html#//apple_ref/doc/uid/TP40009259
 
@@ -36,9 +42,10 @@ duti -s com.microsoft.VSCode css all
 duti -s com.microsoft.VSCode md all
 duti -s com.microsoft.VSCode xls all
 duti -s com.microsoft.VSCode xlsx all
+duti -s com.microsoft.VSCode pub all
 
 # PDF 文件使用 Safari
-duti -s com.apple.Safari pdf all
+duti -s com.apple.iBooksX pdf all
 
 echo "默认应用程序设置已完成。"
 
