@@ -41,10 +41,10 @@ fileAssociations=(
     "com.microsoft.VSCode js"
     "com.microsoft.VSCode ts"
     "com.microsoft.VSCode tsx"
-    "com.microsoft.VSCode md"
-    "com.microsoft.VSCode xls"
-    "com.microsoft.VSCode xlsx"
     "com.microsoft.VSCode pub"
+    "abnerworks.Typora md"
+    "com.microsoft.Excel xls"
+    "com.microsoft.Excel xlsx"
     # PDF 文件
     "com.apple.iBooksX pdf"
 

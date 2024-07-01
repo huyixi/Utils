@@ -16,16 +16,28 @@ fn main() -> io::Result<()> {
         .expect("Invalid folder name")
         .to_string();
 
-    let output_file_path = format!("{}/{}_output.txt", folder_path, folder_name);
+    // Determine the output file path
+    let output_folder = if folder_path.is_empty() {
+        "."
+    } else {
+        folder_path
+    };
+    let output_file_path = format!("{}/{}_output.txt", output_folder, folder_name);
 
     // Create the output file
     let mut output_file = File::create(&output_file_path)?;
 
     // Default list of files to ignore
     let ignore_files = vec![".DS_Store"];
+    let mut unreadable_files = Vec::new();
 
     // Recursively walk through the folder and read each file
-    fn visit_dirs(dir: &Path, output_file: &mut File, ignore_files: &Vec<&str>) -> io::Result<()> {
+    fn visit_dirs(
+        dir: &Path,
+        output_file: &mut File,
+        ignore_files: &Vec<&str>,
+        unreadable_files: &mut Vec<String>,
+    ) -> io::Result<()> {
         if dir.is_dir() {
             for entry in fs::read_dir(dir)? {
                 let entry = entry?;
@@ -34,7 +46,7 @@ fn main() -> io::Result<()> {
                 println!("Processing path: {:?}", path); // Debug: print each path being processed
 
                 if path.is_dir() {
-                    visit_dirs(&path, output_file, ignore_files)?;
+                    visit_dirs(&path, output_file, ignore_files, unreadable_files)?;
                 } else if path.is_file() {
                     let file_name = path.file_name().unwrap().to_str().unwrap();
 
@@ -46,20 +58,43 @@ fn main() -> io::Result<()> {
 
                     println!("Reading file: {}", file_name); // Debug: print each file being read
 
-                    let mut file = File::open(&path)?;
-                    let mut contents = String::new();
-                    file.read_to_string(&mut contents)?;
-
-                    writeln!(output_file, "File Name: {}", file_name)?;
-                    writeln!(output_file, "{}", contents)?;
-                    writeln!(output_file, "-----------------\n\n")?;
+                    match File::open(&path) {
+                        Ok(mut file) => {
+                            let mut contents = String::new();
+                            if file.read_to_string(&mut contents).is_ok() {
+                                writeln!(output_file, "File Name: {}", file_name)?;
+                                writeln!(output_file, "{}", contents)?;
+                                writeln!(output_file, "-----------------\n\n")?;
+                            } else {
+                                println!("Can't read file: {}", file_name);
+                                unreadable_files.push(path.to_string_lossy().to_string());
+                            }
+                        }
+                        Err(_) => {
+                            println!("Can't open file: {}", file_name);
+                            unreadable_files.push(path.to_string_lossy().to_string());
+                        }
+                    }
                 }
             }
         }
         Ok(())
     }
 
-    visit_dirs(Path::new(folder_path), &mut output_file, &ignore_files)?;
+    visit_dirs(
+        Path::new(folder_path),
+        &mut output_file,
+        &ignore_files,
+        &mut unreadable_files,
+    )?;
+
+    // Print unreadable files to the terminal
+    if !unreadable_files.is_empty() {
+        println!("\nUnreadable files:");
+        for file in unreadable_files {
+            println!("{}", file);
+        }
+    }
 
     println!("Output written to {}", output_file_path);
 

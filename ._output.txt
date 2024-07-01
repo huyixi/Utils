@@ -53,6 +53,12 @@ open https://mastodon.social
 File Name: set_default_app.sh
 #!/bin/bash
 
+# Bundle Identifiers
+# For example:
+# mdls -name kMDItemCFBundleIdentifier /System/Applications/Books.app
+# Get all bundle identifiers in /Applications
+# lsappinfo list | rg --multiline '("[^"]*?") ASN:.*\n.*bundleID=("[^"]*?")' --replace '$1 $2' --only-matching
+
 # System-Declared Uniform Type Identifiers
 # https://developer.apple.com/library/archive/documentation/Miscellaneous/Reference/UTIRef/Articles/System-DeclaredUniformTypeIdentifiers.html#//apple_ref/doc/uid/TP40009259
 
@@ -62,40 +68,63 @@ if ! command -v duti &> /dev/null; then
     exit 1
 fi
 
-# 设置图片文件的默认应用为 qView
-duti -s com.interversehq.qView jpg all
-duti -s com.interversehq.qView jpeg all
-duti -s com.interversehq.qView png all
-duti -s com.interversehq.qView gif all
-duti -s com.interversehq.qView tiff all
-duti -s com.interversehq.qView bmp all
-duti -s com.interversehq.qView heic all
+# 设置文件类型与应用程序的关联
+fileAssociations=(
+    # 图片文件
+    "com.interversehq.qView jpg"
+    "com.interversehq.qView jpeg"
+    "com.interversehq.qView png"
+    "com.interversehq.qView gif"
+    "com.interversehq.qView tiff"
+    "com.interversehq.qView bmp"
+    "com.interversehq.qView heic"
+    # 视频文件
+    "com.colliderli.iina mov"
+    "com.colliderli.iina mp4"
+    "com.colliderli.iina avi"
+    "com.colliderli.iina mkv"
+    "com.colliderli.iina m4v"
+    # 文本文件
+    "com.microsoft.VSCode txt"
+    "com.microsoft.VSCode xml"
+    "com.microsoft.VSCode opml"
+    "com.microsoft.VSCode json"
+    "com.microsoft.VSCode html"
+    "com.microsoft.VSCode css"
+    "com.microsoft.VSCode js"
+    "com.microsoft.VSCode ts"
+    "com.microsoft.VSCode tsx"
+    "com.microsoft.VSCode pub"
+    "abnerworks.Typora md"
+    "com.microsoft.Excel xls"
+    "com.microsoft.Excel xlsx"
+    # PDF 文件
+    "com.apple.iBooksX pdf"
 
-# 设置视频文件的默认应用为 IINA
-duti -s com.colliderli.iina mov all
-duti -s com.colliderli.iina mp4 all
-duti -s com.colliderli.iina avi all
-duti -s com.colliderli.iina mkv all
-duti -s com.colliderli.iina m4v all
+)
 
-# 文本类型使用 Visual Studio Code
-duti -s com.microsoft.VSCode txt all
-duti -s com.microsoft.VSCode html all
-duti -s com.microsoft.VSCode xml all
-duti -s com.microsoft.VSCode opml all
-duti -s com.microsoft.VSCode js all
-duti -s com.microsoft.VSCode json all
-duti -s com.microsoft.VSCode css all
-duti -s com.microsoft.VSCode md all
-duti -s com.microsoft.VSCode xls all
-duti -s com.microsoft.VSCode xlsx all
+# 错误日志
+errors=()
 
-# PDF 文件使用 Safari
-duti -s com.apple.Safari pdf all
+# 应用设置
+for association in "${fileAssociations[@]}"; do
+    app=$(echo "$association" | awk '{print $1}')
+    ext=$(echo "$association" | awk '{print $2}')
+    if ! duti -s "$app" "$ext" all; then
+        errors+=("设置 $ext 类型的默认应用程序为 $app 失败。")
+    fi
+done
 
-echo "默认应用程序设置已完成。"
-
-# 根据需要添加更多的文件类型和应用程序
+# 输出错误日志
+if [ ${#errors[@]} -ne 0 ]; then
+    echo "以下文件类型的默认应用程序设置失败："
+    for error in "${errors[@]}"; do
+        echo "$error"
+    done
+    exit 1
+else
+    echo "默认应用程序全部设置成功。"
+fi
 
 -----------------
 
@@ -342,7 +371,7 @@ edition = "2021"
 
 
 File Name: .rustc_info.json
-{"rustc_fingerprint":10542546656862104049,"outputs":{"4614504638168534921":{"success":true,"status":"","code":0,"stdout":"rustc 1.76.0 (07dca489a 2024-02-04)\nbinary: rustc\ncommit-hash: 07dca489ac2d933c78d3c5158e3f43beefeb02ce\ncommit-date: 2024-02-04\nhost: aarch64-apple-darwin\nrelease: 1.76.0\nLLVM version: 17.0.6\n","stderr":""},"15729799797837862367":{"success":true,"status":"","code":0,"stdout":"___\nlib___.rlib\nlib___.dylib\nlib___.dylib\nlib___.a\nlib___.dylib\n/Users/huyixi/.rustup/toolchains/stable-aarch64-apple-darwin\noff\npacked\nunpacked\n___\ndebug_assertions\npanic=\"unwind\"\nproc_macro\ntarget_arch=\"aarch64\"\ntarget_endian=\"little\"\ntarget_env=\"\"\ntarget_family=\"unix\"\ntarget_feature=\"aes\"\ntarget_feature=\"crc\"\ntarget_feature=\"dit\"\ntarget_feature=\"dotprod\"\ntarget_feature=\"dpb\"\ntarget_feature=\"dpb2\"\ntarget_feature=\"fcma\"\ntarget_feature=\"fhm\"\ntarget_feature=\"flagm\"\ntarget_feature=\"fp16\"\ntarget_feature=\"frintts\"\ntarget_feature=\"jsconv\"\ntarget_feature=\"lor\"\ntarget_feature=\"lse\"\ntarget_feature=\"neon\"\ntarget_feature=\"paca\"\ntarget_feature=\"pacg\"\ntarget_feature=\"pan\"\ntarget_feature=\"pmuv3\"\ntarget_feature=\"ras\"\ntarget_feature=\"rcpc\"\ntarget_feature=\"rcpc2\"\ntarget_feature=\"rdm\"\ntarget_feature=\"sb\"\ntarget_feature=\"sha2\"\ntarget_feature=\"sha3\"\ntarget_feature=\"ssbs\"\ntarget_feature=\"vh\"\ntarget_has_atomic=\"128\"\ntarget_has_atomic=\"16\"\ntarget_has_atomic=\"32\"\ntarget_has_atomic=\"64\"\ntarget_has_atomic=\"8\"\ntarget_has_atomic=\"ptr\"\ntarget_os=\"macos\"\ntarget_pointer_width=\"64\"\ntarget_vendor=\"apple\"\nunix\n","stderr":""}},"successes":{}}
+{"rustc_fingerprint":9598281567943839055,"outputs":{"15729799797837862367":{"success":true,"status":"","code":0,"stdout":"___\nlib___.rlib\nlib___.dylib\nlib___.dylib\nlib___.a\nlib___.dylib\n/Users/huyixi/.rustup/toolchains/stable-aarch64-apple-darwin\noff\npacked\nunpacked\n___\ndebug_assertions\noverflow_checks\npanic=\"unwind\"\nproc_macro\nrelocation_model=\"pic\"\ntarget_abi=\"\"\ntarget_arch=\"aarch64\"\ntarget_endian=\"little\"\ntarget_env=\"\"\ntarget_family=\"unix\"\ntarget_feature=\"aes\"\ntarget_feature=\"crc\"\ntarget_feature=\"dit\"\ntarget_feature=\"dotprod\"\ntarget_feature=\"dpb\"\ntarget_feature=\"dpb2\"\ntarget_feature=\"fcma\"\ntarget_feature=\"fhm\"\ntarget_feature=\"flagm\"\ntarget_feature=\"fp16\"\ntarget_feature=\"frintts\"\ntarget_feature=\"jsconv\"\ntarget_feature=\"lor\"\ntarget_feature=\"lse\"\ntarget_feature=\"neon\"\ntarget_feature=\"paca\"\ntarget_feature=\"pacg\"\ntarget_feature=\"pan\"\ntarget_feature=\"pmuv3\"\ntarget_feature=\"ras\"\ntarget_feature=\"rcpc\"\ntarget_feature=\"rcpc2\"\ntarget_feature=\"rdm\"\ntarget_feature=\"sb\"\ntarget_feature=\"sha2\"\ntarget_feature=\"sha3\"\ntarget_feature=\"ssbs\"\ntarget_feature=\"v8.1a\"\ntarget_feature=\"v8.2a\"\ntarget_feature=\"v8.3a\"\ntarget_feature=\"v8.4a\"\ntarget_feature=\"vh\"\ntarget_has_atomic\ntarget_has_atomic=\"128\"\ntarget_has_atomic=\"16\"\ntarget_has_atomic=\"32\"\ntarget_has_atomic=\"64\"\ntarget_has_atomic=\"8\"\ntarget_has_atomic=\"ptr\"\ntarget_has_atomic_equal_alignment=\"128\"\ntarget_has_atomic_equal_alignment=\"16\"\ntarget_has_atomic_equal_alignment=\"32\"\ntarget_has_atomic_equal_alignment=\"64\"\ntarget_has_atomic_equal_alignment=\"8\"\ntarget_has_atomic_equal_alignment=\"ptr\"\ntarget_has_atomic_load_store\ntarget_has_atomic_load_store=\"128\"\ntarget_has_atomic_load_store=\"16\"\ntarget_has_atomic_load_store=\"32\"\ntarget_has_atomic_load_store=\"64\"\ntarget_has_atomic_load_store=\"8\"\ntarget_has_atomic_load_store=\"ptr\"\ntarget_os=\"macos\"\ntarget_pointer_width=\"64\"\ntarget_thread_local\ntarget_vendor=\"apple\"\nunix\n","stderr":""},"4614504638168534921":{"success":true,"status":"","code":0,"stdout":"rustc 1.76.0 (07dca489a 2024-02-04)\nbinary: rustc\ncommit-hash: 07dca489ac2d933c78d3c5158e3f43beefeb02ce\ncommit-date: 2024-02-04\nhost: aarch64-apple-darwin\nrelease: 1.76.0\nLLVM version: 17.0.6\n","stderr":""},"15481046163696847946":{"success":true,"status":"","code":0,"stdout":"___\nlib___.rlib\nlib___.dylib\nlib___.dylib\nlib___.a\nlib___.dylib\n/Users/huyixi/.rustup/toolchains/stable-aarch64-apple-darwin\noff\npacked\nunpacked\n___\ndebug_assertions\npanic=\"unwind\"\nproc_macro\ntarget_arch=\"aarch64\"\ntarget_endian=\"little\"\ntarget_env=\"\"\ntarget_family=\"unix\"\ntarget_feature=\"aes\"\ntarget_feature=\"crc\"\ntarget_feature=\"dit\"\ntarget_feature=\"dotprod\"\ntarget_feature=\"dpb\"\ntarget_feature=\"dpb2\"\ntarget_feature=\"fcma\"\ntarget_feature=\"fhm\"\ntarget_feature=\"flagm\"\ntarget_feature=\"fp16\"\ntarget_feature=\"frintts\"\ntarget_feature=\"jsconv\"\ntarget_feature=\"lor\"\ntarget_feature=\"lse\"\ntarget_feature=\"neon\"\ntarget_feature=\"paca\"\ntarget_feature=\"pacg\"\ntarget_feature=\"pan\"\ntarget_feature=\"pmuv3\"\ntarget_feature=\"ras\"\ntarget_feature=\"rcpc\"\ntarget_feature=\"rcpc2\"\ntarget_feature=\"rdm\"\ntarget_feature=\"sb\"\ntarget_feature=\"sha2\"\ntarget_feature=\"sha3\"\ntarget_feature=\"ssbs\"\ntarget_feature=\"vh\"\ntarget_has_atomic=\"128\"\ntarget_has_atomic=\"16\"\ntarget_has_atomic=\"32\"\ntarget_has_atomic=\"64\"\ntarget_has_atomic=\"8\"\ntarget_has_atomic=\"ptr\"\ntarget_os=\"macos\"\ntarget_pointer_width=\"64\"\ntarget_vendor=\"apple\"\nunix\n","stderr":""}},"successes":{}}
 -----------------
 
 
