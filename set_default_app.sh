@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Bundle Identifiers
+# How to find App Bundle Identifiers(Bundle ID) of software?
 # For example:
 # mdls -name kMDItemCFBundleIdentifier /System/Applications/Books.app
 # Get all bundle identifiers in /Applications
@@ -32,22 +32,22 @@ fileAssociations=(
     "com.colliderli.iina mkv"
     "com.colliderli.iina m4v"
     # 文本文件
-    "com.microsoft.VSCode txt"
-    "com.microsoft.VSCode xml"
-    "com.microsoft.VSCode opml"
-    "com.microsoft.VSCode json"
-    "com.microsoft.VSCode html"
-    "com.microsoft.VSCode css"
-    "com.microsoft.VSCode js"
-    "com.microsoft.VSCode ts"
-    "com.microsoft.VSCode tsx"
-    "com.microsoft.VSCode pub"
+    "dev.zed.Zed txt"
+    "dev.zed.Zed xml"
+    "dev.zed.Zed opml"
+    "dev.zed.Zed json"
+    "dev.zed.Zed html"
+    "dev.zed.Zed css"
+    "dev.zed.Zed js"
+    "dev.zed.Zed ts"
+    "dev.zed.Zed tsx"
+    "dev.zed.Zed pub"
+    "dev.zed.Zed yaml"
     "abnerworks.Typora md"
     "com.microsoft.Excel xls"
     "com.microsoft.Excel xlsx"
     # PDF 文件
     "com.apple.iBooksX pdf"
-
 )
 
 # 错误日志
