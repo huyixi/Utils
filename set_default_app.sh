@@ -43,6 +43,7 @@ fileAssociations=(
     "dev.zed.Zed tsx"
     "dev.zed.Zed pub"
     "dev.zed.Zed yaml"
+    "dev.zed.Zed csv"
     "abnerworks.Typora md"
     "com.microsoft.Excel xls"
     "com.microsoft.Excel xlsx"
