@@ -36,7 +36,6 @@ fileAssociations=(
     "dev.zed.Zed xml"
     "dev.zed.Zed opml"
     "dev.zed.Zed json"
-    "dev.zed.Zed html"
     "dev.zed.Zed css"
     "dev.zed.Zed js"
     "dev.zed.Zed ts"
@@ -48,7 +47,7 @@ fileAssociations=(
     "com.microsoft.Excel xls"
     "com.microsoft.Excel xlsx"
     # PDF 文件
-    "com.apple.iBooksX pdf"
+    "com.google.Chrome pdf"
 )
 
 # 错误日志
