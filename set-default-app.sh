@@ -1,11 +1,10 @@
 #!/bin/bash
 
 # How to find App Bundle Identifiers(Bundle ID) of software?
+#
 # For example:
 # mdls -name kMDItemCFBundleIdentifier /System/Applications/Books.app
-# Get all bundle identifiers in /Applications
-# lsappinfo list | rg --multiline '("[^"]*?") ASN:.*\n.*bundleID=("[^"]*?")' --replace '$1 $2' --only-matching
-
+#
 # System-Declared Uniform Type Identifiers
 # https://developer.apple.com/library/archive/documentation/Miscellaneous/Reference/UTIRef/Articles/System-DeclaredUniformTypeIdentifiers.html#//apple_ref/doc/uid/TP40009259
 
@@ -46,7 +45,10 @@ fileAssociations=(
     "abnerworks.Typora md"
     "com.microsoft.Excel xls"
     "com.microsoft.Excel xlsx"
+<<<<<<< HEAD:set-default-app.sh
     # PDF 文件
+=======
+>>>>>>> b17d86c81cfb05d76fedd1706a21661207985601:set_default_app.sh
     "com.google.Chrome pdf"
 )
 
